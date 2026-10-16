@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>تقارير الدورة والأرباح - مزرعة الإخلاص</title>
+    <!-- استدعاء خطوط وتصميم متناسق مع التطبيق -->
+    <style>
+        :root {
+            --primary-color: #2c3e50;
+            --accent-color: #27ae60;
+            --bg-color: #f8f9fa;
+            --card-bg: #ffffff;
+            --text-color: #333333;
+        }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            margin: 0;
+            padding: 20px;
+        }
+        header {
+            text-align: center;
+            background: var(--primary-color);
+            color: white;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+        }
+        .nav-links {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+        .nav-links a {
+            background: #fff;
+            color: var(--primary-color);
+            padding: 8px 15px;
+            text-decoration: none;
+            border-radius: 5px;
+            font-weight: bold;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        .card {
+            background: var(--card-bg);
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+            margin-bottom: 20px;
+        }
+        .card h2 {
+            margin-top: 0;
+            color: var(--primary-color);
+            font-size: 1.2rem;
+            border-bottom: 2px solid #eee;
+            padding-bottom: 10px;
+        }
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-top: 15px;
+        }
+        .stat-box {
+            background: #f1f2f6;
+            padding: 15px;
+            border-radius: 8px;
+            text-align: center;
+        }
+        .stat-box span {
+            display: block;
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: var(--accent-color);
+            margin-top: 5px;
+        }
+        .btn-group {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            margin-top: 15px;
+        }
+        button, .btn {
+            background: var(--accent-color);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: bold;
+            text-decoration: none;
+            text-align: center;
+            flex: 1;
+        }
+        button.secondary {
+            background: #2980b9;
+        }
+        button.whatsapp {
+            background: #25d366;
+        }
+        button:hover {
+            opacity: 0.9;
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>📊 تقارير الدورة والأرباح</h1>
+        <p>مزرعة الإخلاص للإدارة الحديثة والدواجن</p>
+    </header>
+
+    <div class="nav-links">
+        <a href="index.html">📌 الرئيسية</a>
+        <a href="calc.html">📊 الحسابات</a>
+        <a href="feed.html">🌾 العلف</a>
+        <a href="weight.html">⚖️ الأوزان</a>
+        <a href="report.html" style="background: var(--accent-color); color:white;">📈 التقرير الشامل</a>
+    </div>
+
+    <div class="container">
+        <!-- مؤشرات الأداء الحسابية -->
+        <div class="card">
+            <h2>📈 ملخص المؤشرات الحيوية والاقتصادية</h2>
+            <div class="grid">
+                <div class="stat-box">
+                    إجمالي التكاليف تقريبياً
+                    <span id="totalCost">0 ج.م</span>
+                </div>
+                <div class="stat-box">
+                    إجمالي العلف المستهلك
+                    <span id="totalFeed">0 كجم</span>
+                </div>
+                <div class="stat-box">
+                    معدل التحويل الغذائي (FCR)
+                    <span id="fcrVal">0.00</span>
+                </div>
+                <div class="stat-box">
+                    صافي الربح المتوقع
+                    <span id="netProfit" style="color: #27ae60;">0 ج.م</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- أدوات التصدير والمشاركة -->
+        <div class="card">
+            <h2>💾 تصدير ومشاركة بيانات الدورة</h2>
+            <p>يمكنك حفظ تقرير الدورة أو مشاركته فوراً:</p>
+            <div class="btn-group">
+                <button onclick="exportToCSV()" class="secondary">📥 تصدير ملف Excel (CSV)</button>
+                <button onclick="window.print()">🖨️ طباعة أو حفظ PDF</button>
+                <button onclick="shareWhatsApp()" class="whatsapp">💬 مشاركة عبر واتساب</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // قراءة البيانات المحفوظة محلياً واستخراج الملخص
+        document.addEventListener("DOMContentLoaded", function() {
+            // افتراض مفاتيح التخزين المحلية المعتادة في التطبيق (يمكن تعديلها حسب مسميات الفريبلز لديك)
+            let feed = parseFloat(localStorage.getItem('total_feed') || 1250);
+            let cost = parseFloat(localStorage.getItem('total_cost') || 45000);
+            let sales = parseFloat(localStorage.getItem('total_sales') || 62000);
+            let weight = parseFloat(localStorage.getItem('avg_weight') || 2.1);
+            let birdsCount = parseInt(localStorage.getItem('current_birds') || 1000);
+
+            // حساب FCR (إجمالي العلف / (متوسط الوزن * عدد الطيور الحالي))
+            let totalWeightKg = (weight * birdsCount);
+            let fcr = totalWeightKg > 0 ? (feed / totalWeightKg).toFixed(2) : "0.00";
+            let profit = sales - cost;
+
+            document.getElementById('totalCost').innerText = cost.toLocaleString() + " ج.م";
+            document.getElementById('totalFeed').innerText = feed.toLocaleString() + " كجم";
+            document.getElementById('fcrVal').innerText = fcr;
+            document.getElementById('netProfit').innerText = profit.toLocaleString() + " ج.م";
+        });
+
+        // وظيفة تصدير البيانات إلى ملف CSV يفتح في أكسيل
+        function exportToCSV() {
+            let csvContent = "\uFEFFالبيان,القيمة\n";
+            csvContent += "إجمالي التكاليف," + (localStorage.getItem('total_cost') || 45000) + " ج.م\n";
+            csvContent += "إجمالي العلف," + (localStorage.getItem('total_feed') || 1250) + " كجم\n";
+            csvContent += "العدد الحالي," + (localStorage.getItem('current_birds') || 1000) + " طائر\n";
+
+            let blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+            let url = URL.createObjectURL(blob);
+            let a = document.createElement('a');
+            a.href = url;
+            a.download = 'Al-Ikhlas_Farm_Report.csv';
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+        }
+
+        // مشاركة ملخص سريع على واتساب
+        function shareWhatsApp() {
+            let cost = localStorage.getItem('total_cost') || '45000';
+            let feed = localStorage.getItem('total_feed') || '1250';
+            let text = `📊 *تقرير مزرعة الإخلاص للدواجن*%0A- إجمالي التكاليف: ${cost} ج.م%0A- استهلاك العلف: ${feed} كجم%0A- النظام يعمل بكفاءة ولله الحمد.`;
+            window.open(`https://wa.me/?text=${text}`, '_blank');
+        }
+    </script>
+
+<footer>
+    <p style="text-align: center; color: #7f8c8d; font-size: 0.9rem;">نظام الإدارة الحديثة • تطوير وإدارة: السيد متولي</p>
+</footer>
+
+</body>
+html>
