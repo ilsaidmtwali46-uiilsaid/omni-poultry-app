@@ -1,153 +1,191 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>مزرعة الإخلاص للإدارة الحديثة والدواجن</title>
-    <style>
-        :root {
-            --primary-color: #2c3e50;
-            --accent-color: #27ae60;
-            --bg-color: #f4f6f7;
-            --card-bg: #ffffff;
-            --text-color: #333333;
-            --border-color: #dcdde1;
-        }
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: var(--bg-color);
-            color: var(--text-color);
-            margin: 0;
-            padding: 15px;
-        }
-        header {
-            text-align: center;
-            background: var(--primary-color);
-            color: white;
-            padding: 20px;
-            border-radius: 12px;
-            margin-bottom: 20px;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-        }
-        header h1 {
-            margin: 0 0 5px 0;
-            font-size: 1.5rem;
-        }
-        header p {
-            margin: 0;
-            color: #bdc3c7;
-            font-size: 0.95rem;
-        }
-        /* شريط التنقل والأقسام */
-        .nav-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
-            gap: 10px;
-            margin-bottom: 20px;
-        }
-        .nav-grid a {
-            background: #fff;
-            color: var(--primary-color);
-            padding: 12px 10px;
-            text-decoration: none;
-            border-radius: 8px;
-            font-weight: bold;
-            text-align: center;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
-            font-size: 0.9rem;
-            transition: 0.2s;
-        }
-        .nav-grid a:hover {
-            background: var(--accent-color);
-            color: white;
-        }
-        .nav-grid a.active {
-            background: var(--accent-color);
-            color: white;
-        }
-        .container {
-            max-width: 800px;
-            margin: 0 auto;
-        }
-        .card {
-            background: var(--card-bg);
-            padding: 20px;
-            border-radius: 12px;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
-            margin-bottom: 20px;
-        }
-        .card h2 {
-            margin-top: 0;
-            color: var(--primary-color);
-            font-size: 1.2rem;
-            border-bottom: 2px solid var(--border-color);
-            padding-bottom: 10px;
-        }
-        .status-flex {
-            display: flex;
-            justify-content: space-around;
-            text-align: center;
-            font-size: 1.1rem;
-            font-weight: bold;
-            background: #f8f9fa;
-            padding: 15px;
-            border-radius: 8px;
-        }
-        .status-flex span span {
-            color: var(--accent-color);
-        }
-        /* جدول المهام والمدخلات اليومية */
-        .task-row {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 10px 0;
-            border-bottom: 1px solid #eee;
-            gap: 10px;
-        }
-        .task-row:last-child {
-            border-bottom: none;
-        }
-        input[type="number"], input[type="text"] {
-            padding: 8px;
-            border: 1px solid var(--border-color);
-            border-radius: 6px;
-            width: 120px;
-            text-align: center;
-            font-size: 1rem;
-        }
-        button.save-btn {
-            background: var(--accent-color);
-            color: white;
-            border: none;
-            padding: 8px 15px;
-            border-radius: 6px;
-            cursor: pointer;
-            font-weight: bold;
-        }
-        button.save-btn:hover {
-            opacity: 0.9;
-        }
-        .toast {
-            display: none;
-            background: #27ae60;
-            color: white;
-            text-align: center;
-            padding: 10px;
-            border-radius: 6px;
-            margin-bottom: 15px;
-            font-weight: bold;
-        }
-        footer {
-            text-align: center;
-            color: #7f8c8d;
-            font-size: 0.85rem;
-            margin-top: 30px;
-        }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<meta name="description" content="تطبيق احترافي لإدارة مزارع الدواجن وتتبع دورات الإنتاج والأنشطة التجارية">
+<title>الرئيسية والمهام — إدارة المزرعة</title>
+<style>
+:root{--green:#166534;--pale:#f0fdf4;--ink:#17211b;--muted:#64748b;--wa:#25D366}
+*{box-sizing:border-box}
+body{margin:0;font-family:Tahoma,Arial,sans-serif;background:#f3f7f4;color:var(--ink);line-height:1.6;padding-bottom:50px}
+
+/* الهيدر وشريط البث */
+header{background:linear-gradient(135deg,#14532d,#15803d);color:#fff;padding:15px;text-align:center;box-shadow:0 2px 5px rgba(0,0,0,0.1)}
+header h1{margin:0;font-size:20px;font-weight:bold} 
+header p{margin:4px 0 0;font-size:12px;opacity:.9}
+
+.marquee-container{background:#1e293b;color:#fbbf24;padding:6px 10px;font-size:12px;font-weight:bold;overflow:hidden;white-space:nowrap;border-bottom:2px solid #14532d;min-height:30px}
+
+/* شريط التنقل العلوي */
+.nav-bar{
+  background: #ffffff;
+  display: flex;
+  gap: 5px;
+  overflow-x: auto;
+  padding: 10px;
+  box-shadow: 0 3px 8px rgba(0,0,0,0.15);
+  border-bottom: 2px solid #cbd5cf;
+  position: sticky;
+  top: 0;
+  z-index: 9999;
+}
+.nav-bar a{
+  white-space: nowrap;
+  border: 1px solid #166534;
+  background: #f0fdf4;
+  color: var(--green);
+  padding: 8px 14px;
+  border-radius: 8px;
+  font-weight: bold;
+  text-decoration: none;
+  font-size: 13px;
+  flex-shrink: 0;
+}
+.nav-bar a.active{ background: var(--green); color: #fff; }
+
+main{max-width:850px;margin:auto;padding:12px}
+.card{background:#fff;border:1px solid #e0e7e2;border-radius:12px;padding:16px;margin-bottom:12px;box-shadow:0 1px 4px rgba(0,0,0,0.05)}
+h2{font-size:16px;margin:0 0 10px;color:var(--green);border-bottom:1px solid #f0f0f0;padding-bottom:6px}
+
+.task-item{display:flex;align-items:center;justify-content:space-between;background:#f8fafc;padding:10px;border-radius:8px;margin-bottom:8px;border:1px solid #e2e8f0}
+.task-item.done{background:#e2e8f0;text-decoration:line-through;opacity:0.7}
+
+footer{text-align:center;color:var(--muted);font-size:11px;padding:15px}
+</style>
 </head>
 <body>
 
-    <header>
-        <h1>🐓 مزرعة الإخلاص للإدارة الحديثة والدواجن</h1>
-        <p>نظام إدارة
+<!-- الهيدر الديناميكي المربوط بالأدمن -->
+<header>
+  <h1 id="displayFarmName">🐓 جاري جلب اسم المزرعة...</h1>
+  <p id="displayOwnerName">نظام الإدارة الحديثة والدواجن</p>
+</header>
+
+<!-- الشريط الدعائي (فارغ تماماً وينتظر البث من لوحة الأدمن) -->
+<div class="marquee-container">
+  <marquee id="broadcastText" behavior="scroll" direction="right" scrollamount="4"></marquee>
+</div>
+
+<!-- شريط التنقل المتكامل بين الـ 10 صفحات -->
+<div class="nav-bar">
+  <a href="index.html" class="active">📌 المهام اليومية</a>
+  <a href="calc.html">📊 الحسابات والأرباح</a>
+  <a href="setup.html">⚙️ إعدادات الدورة</a>
+  <a href="feed.html">🌾 استهلاك العلف</a>
+  <a href="weight.html">⚖️ متابعة الأوزان</a>
+  <a href="vax.html">💉 برنامج التحصين</a>
+  <a href="notes.html">🩺 التشخيص البيطري</a>
+  <a href="contact.html">💬 الاستشارات والطلبات</a>
+  <a href="backup.html">💾 النسخ الاحتياطي</a>
+</div>
+
+<main>
+
+<!-- بطاقة ملخص الدورة -->
+<div class="card">
+  <h2>📅 حالة الدورة الحالية</h2>
+  <div style="display:flex; justify-content:space-between; font-size:14px; font-weight:bold;">
+    <span>عمر القطيع: <span id="currentAge" style="color:var(--green)">1</span> يوم</span>
+    <span>العدد الحالي: <span id="currentCount" style="color:var(--green)">0</span> طائر</span>
+  </div>
+</div>
+
+<!-- بطاقة المهام اليومية -->
+<div class="card">
+  <h2>✅ جدول المهام اليومية المطلوبة</h2>
+  <div id="tasksList">
+    <div class="task-item">
+      <span>فحص درجات الحرارة والتهوية</span>
+      <input type="checkbox" onchange="toggleTask(this)">
+    </div>
+    <div class="task-item">
+      <span>تسجيل كمية العلف المستهلك اليوم</span>
+      <input type="checkbox" onchange="toggleTask(this)">
+    </div>
+    <div class="task-item">
+      <span>مراجعة وإضافة أدوية أو تحصينات اليوم</span>
+      <input type="checkbox" onchange="toggleTask(this)">
+    </div>
+    <div class="task-item">
+      <span>تسجيل عدد النافق (إن وجد)</span>
+      <input type="checkbox" onchange="toggleTask(this)">
+    </div>
+  </div>
+</div>
+
+</main>
+
+<footer>نظام الإدارة الحديثة • جميع الحقوق محفوظة</footer>
+
+<script>
+// رابط قاعدة بيانات Firebase الخاصة بك
+const DB_URL = "https://tracking-52992-default-rtdb.firebaseio.com/";
+
+// 1. التحقق من ترخيص التفعيل
+function checkLicense() {
+  let isVerified = localStorage.getItem('omni_app_license_verified');
+  if(!isVerified) {
+    window.location.href = 'activate.html';
+  }
+}
+
+// 2. جلب اسم المزرعة المخصص من لوحة الأدمن سحابياً
+function loadFarmBranding() {
+  fetch(`${DB_URL}app_config.json`)
+    .then(res => res.json())
+    .then(data => {
+      if(data && data.farmName) {
+        document.getElementById('displayFarmName').textContent = '🐓 ' + data.farmName;
+        if(data.ownerName) {
+          document.getElementById('displayOwnerName').textContent = 'إدارة: ' + data.ownerName;
+        }
+      } else {
+        document.getElementById('displayFarmName').textContent = '🐓 إدارة المزرعة';
+      }
+    })
+    .catch(() => {
+      document.getElementById('displayFarmName').textContent = '🐓 إدارة المزرعة';
+    });
+}
+
+// 3. جلب التلميحات والإعلانات من لوحة الأدمن لشريط البث
+function loadBroadcast() {
+  fetch(`${DB_URL}broadcast.json`)
+    .then(res => res.json())
+    .then(data => {
+      if(data && data.text) {
+        let activeKey = localStorage.getItem('omni_active_key') || '';
+        if(data.target === 'ALL' || data.target === activeKey) {
+          document.getElementById('broadcastText').textContent = `${data.type}: ${data.text}`;
+        } else {
+          document.getElementById('broadcastText').textContent = '';
+        }
+      } else {
+        document.getElementById('broadcastText').textContent = '';
+      }
+    })
+    .catch(() => {
+      document.getElementById('broadcastText').textContent = '';
+    });
+}
+
+function toggleTask(chk) {
+  let item = chk.closest('.task-item');
+  if(chk.checked) {
+    item.classList.add('done');
+  } else {
+    item.classList.remove('done');
+  }
+}
+
+// تشغيل الوظائف عند فتح الصفحة
+window.addEventListener('DOMContentLoaded', () => {
+  checkLicense();
+  loadFarmBranding();
+  loadBroadcast();
+});
+</script>
+
+</body>
+</html>
