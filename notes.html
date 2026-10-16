@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<title>الملاحظات والدعم البيطري - مزرعة الإخلاص</title>
+<style>
+:root{--green:#166534;--pale:#f0fdf4;--ink:#17211b;--muted:#64748b;--red:#b91c1c;--blue:#1d4ed8}
+*{box-sizing:border-box}
+body{margin:0;font-family:Tahoma,Arial,sans-serif;background:#f3f7f4;color:var(--ink);line-height:1.6;padding-bottom:50px}
+
+/* الهيدر والشريط الدعائي */
+header{background:linear-gradient(135deg,#14532d,#15803d);color:#fff;padding:12px 15px}
+header h1{margin:0;font-size:18px} header p{margin:2px 0 0;font-size:11px;opacity:.9}
+.marquee-container{background:#1e293b;color:#fbbf24;padding:6px 10px;font-size:12px;font-weight:bold;overflow:hidden;white-space:nowrap;border-bottom:2px solid #14532d}
+
+/* شريط التنقل العلوي بين الملفات */
+.nav-bar{
+  background: #ffffff;
+  display: flex;
+  gap: 5px;
+  overflow-x: auto;
+  padding: 10px;
+  box-shadow: 0 3px 8px rgba(0,0,0,0.15);
+  border-bottom: 2px solid #cbd5cf;
+  position: sticky;
+  top: 0;
+  z-index: 9999;
+}
+.nav-bar a{
+  white-space: nowrap;
+  border: 1px solid #166534;
+  background: #f0fdf4;
+  color: var(--green);
+  padding: 8px 14px;
+  border-radius: 8px;
+  font-weight: bold;
+  text-decoration: none;
+  font-size: 13px;
+  flex-shrink: 0;
+}
+.nav-bar a.active{
+  background: var(--green);
+  color: #fff;
+}
+
+main{max-width:980px;margin:auto;padding:10px}
+.card{background:#fff;border:1px solid #e0e7e2;border-radius:12px;padding:12px;margin-bottom:10px;box-shadow:0 1px 4px rgba(0,0,0,0.05)}
+h2{font-size:16px;margin:0 0 8px;color:var(--green)}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:8px}
+label{display:block;font-size:12px;font-weight:bold;margin:6px 0 2px}
+input,select,textarea{width:100%;font:inherit;font-size:14px;padding:8px;border:1px solid #cbd5cf;border-radius:8px;background:#fff}
+textarea{min-height:70px}
+button.action{border:0;border-radius:8px;background:var(--green);color:#fff;padding:9px 12px;font:inherit;font-weight:bold;margin-top:8px;cursor:pointer}
+button.danger{background:var(--red);color:#fff;cursor:pointer;border:0;border-radius:6px;padding:4px 8px}
+.note{padding:10px;border-radius:8px;background:#eff6ff;font-size:13px;white-space:pre-line;border:1px solid #bfdbfe;color:#1e40af}
+.item{border:1px solid #e2e8f0;border-radius:8px;padding:10px;margin-top:8px;font-size:12px;background:#fafafa}
+.muted{color:var(--muted);font-size:11px}
+footer{text-align:center;color:var(--muted);font-size:11px;padding:15px}
+</style>
+</head>
+<body>
+
+<script>
+// فحص ترخيص التشغيل
+if(localStorage.getItem('omni_app_license_verified') !== 'true') {
+  alert('🔒 يجب تفعيل ترخيص التطبيق أولاً.');
+  window.location.href = 'activate.html';
+}
+</script>
+
+<header>
+  <h1>🩺 الملاحظات والدعم البيطري — السيد متولي</h1>
+  <p>مزرعة الإخلاص للإدارة الحديثة والدواجن</p>
+</header>
+
+<div class="marquee-container">
+  <marquee behavior="scroll" direction="right" scrollamount="4">
+    🌟 مزرعة الإخلاص للإدارة الحديثة والدواجن • إدارة: السيد متولي • رصد الأعراض المرضية وإصدار التوجيهات البيطرية الفورية.
+  </marquee>
+</div>
+
+<!-- شريط التنقل بين الصفحات Ten Pages/Views -->
+<div class="nav-bar">
+  <a href="index.html">📌 المهام</a>
+  <a href="calc.html">📊 الحسابات</a>
+  <a href="setup.html">⚙️ الإعدادات</a>
+  <a href="feed.html">🌾 المخزن</a>
+  <a href="weight.html">⚖️ الأوزان</a>
+  <a href="vax.html">💉 التحصينات</a>
+  <a href="notes.html" class="active">🩺 البيطري</a>
+  <a href="backup.html">💾 النسخ</a>
+</div>
+
+<main>
+<div class="card">
+<h2>🩺 تسجيل الأعراض والملاحظات اليومية</h2>
+<div class="grid">
+<div><label>تاريخ الملاحظة</label><input id="noteDate" type="date"></div>
+<div><label>نوع الحالة / الأعراض الرئيسية</label><select id="noteType">
+<option value="طبيعي مستقر">حالة طبيعية مستقرة</option>
+<option value="خمول وتجمع">خمول وتجمع تحت الدفايات (مشكلة حرارة)</option>
+<option value="أصوات تنفسية وطشمة">أصوات تنفسية / طشمة / فتح منقار (مشكلة تهوية)</option>
+<option value="إسهال بني أو مدمم">إسهال بني أو مدمم (اشتباه كوكسيديا)</option>
+<option value="إسهال أبيض أو جبني">إسهال أبيض أو جبني (مشكلة بكتيرية/كلوية)</option>
+<option value="قلة استهلاك">ضعف شهية وقلة استهلاك العلف أو الماء</option>
+<option value="ارتفاع نفوق مفاجئ">ارتفاع ملحوظ في معدل النفوق</option>
+<option value="رطوبة فرشة ونشادر">رطوبة عالية وانبعاث غاز نشادر بالفرشة</option>
+<option value="أخرى">أخرى</option>
+</select></div>
+</div>
+<label>تفاصيل دقيقة (درجة الحرارة، عدد الطيور المتأثرة، لون الزرق...)</label>
+<textarea id="noteText" placeholder="اكتب التفاصيل هنا..."></textarea>
+<button class="action" id="addNoteBtn" type="button">حفظ الملاحظة وإصدار التوجيه البيطري</button>
+
+<h3 style="margin-top:12px">التوجيه والإرشاد البيطري الفوري</h3>
+<div id="vetAdviceBox" class="note">سجّل الحالة بالأعلى لعرض التوجيه والإرشاد الطبي المناسب.</div>
+</div>
+
+<div class="card">
+<h2>سجل الملاحظات والأعراض السابقة</h2>
+<div id="noteList" style="margin-top:6px">
+  <p class="muted">لا توجد ملاحظات مسجلة.</p>
+</div>
+</div>
+</main>
+
+<footer>متابع دورة الكتاكيت الاحترافي • تصميم وإدارة: السيد متولي</footer>
+
+<script>
+const $=id=>document.getElementById(id);
+
+// مفتاح العميل الخاص للخصوصية
+const activeKey = localStorage.getItem('omni_active_key') || 'default';
+const DBKEY = 'chick_app_data_' + activeKey;
+
+let db = { notes:[] };
+
+function today(){ return new Date().toISOString().slice(0,10); }
+
+function loadData(){
+  try{
+    let saved = localStorage.getItem(DBKEY);
+    if(saved) db = JSON.parse(saved);
+  }catch(e){}
+  
+  $('noteDate').value = today();
+  renderNotes();
+}
+
+function saveData(){
+  try{
+    localStorage.setItem(DBKEY, JSON.stringify(db));
+    renderNotes();
+  }catch(e){ alert('خطأ في حفظ البيانات'); }
+}
+
+function renderNotes(){
+  let html = (db.notes || []).map((x, i) => `
+    <div class="item">
+      <b>🩺 ${x.date} — ${x.type}</b>
+      <p style="margin:4px 0">${x.text || 'بدون تفاصيل إضافية'}</p>
+      <small style="color:var(--blue)"><b>الإرشاد البيطري:</b> ${x.advice}</small><br>
+      <button class="danger" onclick="delNote(${i})" type="button" style="margin-top:6px">حذف</button>
+    </div>
+  `).join('');
+  
+  $('noteList').innerHTML = html || '<p class="muted">لا توجد ملاحظات مسجلة.</p>';
+}
+
+$('addNoteBtn').onclick = () => {
+  let type = $('noteType').value;
+  let text = $('noteText').value.trim();
+  
+  let advice = 'إرشاد: الحالة مستقرة، استمر في المتابعة اليومية الدقيقة للتهوية والحرارة.';
+  if(type.includes('خمول')) advice = 'إرشاد عاجل: افحص فوراً درجة حرارة الدفايات وتأكد من توزيع الكتاكيت بانتظام وعدم وجود تيارات هواء بارد.';
+  else if(type.includes('كوكسيديا')) advice = 'إرشاد عاجل: استشر الطبيب البيطري فوراً لصرف مضاد كوكسيديا فعال مع ضرورة جفاف الفرشة وتغيير المبلل منها.';
+  else if(type.includes('تنفسية')) advice = 'إرشاد عاجل: تحقق من نسبة غاز النشادر (الأمونيا) بالحظيرة، وحسّن التهوية بحذر دون إحداث تيارات هواء مباشرة.';
+  else if(type.includes('بكتيرية')) advice = 'إرشاد عاجل: افحص سموم العلف ومصادر المياه، واضبط جرعات مضادات السموم وغسيل الكلى.';
+  else if(type.includes('نفوق')) advice = 'إرشاد عاجل: قم بعزل الطيور المتأثرة فوراً، وافحص العلف والماء، واستشر أخصائي للدعم الفوري.';
+  else if(type.includes('نشادر')) advice = 'إرشاد عاجل: تخلص من الفرشة الرطبة فوراً وقلل من رطوبة المكان لخفض معدل النشادر الحارق لأعين وريش القطيع.';
+  
+  $('vetAdviceBox').textContent = advice;
+  
+  if(!db.notes) db.notes = [];
+  db.notes.push({ date: $('noteDate').value \vert{}\vert{} today(), type, text, advice });$('noteText').value = '';
+  saveData();
+  alert('🟢 تم حفظ الملاحظة وإصدار التوجيه البيطري بنجاح!');
+};
+
+window.delNote = (index) => {
+  if(confirm('هل تريد حذف هذه الملاحظة؟')){
+    db.notes.splice(index, 1);
+    saveData();
+  }
+};
+
+loadData();
+</script>
+<!-- سكربت استقبال البث والتحديثات المباشرة للشريط الدعائي -->
+<script>
+(function initBroadcastSystem() {
+  const BROADCAST_DB = 'omni_broadcast_messages';
+  const activeKey = localStorage.getItem('omni_active_key') || '';
+
+  function checkBroadcast() {
+    try {
+      let savedMsg = localStorage.getItem(BROADCAST_DB);
+      if (savedMsg) {
+        let msgObj = JSON.parse(savedMsg);
+        if (msgObj.target === 'ALL' || msgObj.target === activeKey) {
+          let marqueeContainer = document.querySelector('.marquee-container');
+          if (marqueeContainer) {
+            marqueeContainer.innerHTML = `<marquee behavior="scroll" direction="right" scrollamount="4">
+              ${msgObj.type}: ${msgObj.text} • إدارة: السيد متولي (مزرعة الإخلاص)
+            </marquee>`;
+          }
+        }
+      }
+    } catch (e) {}
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', checkBroadcast);
+  } else {
+    checkBroadcast();
+  }
+})();
+</script>
+
+</body>
+</html>

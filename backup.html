@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<title>النسخ الاحتياطي وإدارة البيانات - مزرعة الإخلاص</title>
+<style>
+:root{--green:#166534;--pale:#f0fdf4;--ink:#17211b;--muted:#64748b;--red:#b91c1c;--blue:#1d4ed8}
+*{box-sizing:border-box}
+body{margin:0;font-family:Tahoma,Arial,sans-serif;background:#f3f7f4;color:var(--ink);line-height:1.6;padding-bottom:50px}
+
+/* الهيدر والشريط الدعائي */
+header{background:linear-gradient(135deg,#14532d,#15803d);color:#fff;padding:12px 15px}
+header h1{margin:0;font-size:18px} header p{margin:2px 0 0;font-size:11px;opacity:.9}
+.marquee-container{background:#1e293b;color:#fbbf24;padding:6px 10px;font-size:12px;font-weight:bold;overflow:hidden;white-space:nowrap;border-bottom:2px solid #14532d}
+
+/* شريط التنقل العلوي بين الملفات */
+.nav-bar{
+  background: #ffffff;
+  display: flex;
+  gap: 5px;
+  overflow-x: auto;
+  padding: 10px;
+  box-shadow: 0 3px 8px rgba(0,0,0,0.15);
+  border-bottom: 2px solid #cbd5cf;
+  position: sticky;
+  top: 0;
+  z-index: 9999;
+}
+.nav-bar a{
+  white-space: nowrap;
+  border: 1px solid #166534;
+  background: #f0fdf4;
+  color: var(--green);
+  padding: 8px 14px;
+  border-radius: 8px;
+  font-weight: bold;
+  text-decoration: none;
+  font-size: 13px;
+  flex-shrink: 0;
+}
+.nav-bar a.active{
+  background: var(--green);
+  color: #fff;
+}
+
+main{max-width:980px;margin:auto;padding:10px}
+.card{background:#fff;border:1px solid #e0e7e2;border-radius:12px;padding:12px;margin-bottom:10px;box-shadow:0 1px 4px rgba(0,0,0,0.05)}
+h2{font-size:16px;margin:0 0 8px;color:var(--green)}
+label{display:block;font-size:12px;font-weight:bold;margin:6px 0 2px}
+input{width:100%;font:inherit;font-size:14px;padding:8px;border:1px solid #cbd5cf;border-radius:8px;background:#fff}
+button.action{border:0;border-radius:8px;background:var(--green);color:#fff;padding:10px 14px;font:inherit;font-weight:bold;margin-top:8px;cursor:pointer;width:100%}
+button.secondary{background:#1d4ed8;color:#fff;border:0;cursor:pointer;padding:10px 14px;border-radius:8px;font-weight:bold;width:100%;margin-top:8px}
+button.danger{background:var(--red);color:#fff;cursor:pointer;border:0;border-radius:8px;padding:10px 14px;font-weight:bold;width:100%;margin-top:8px}
+.muted{color:var(--muted);font-size:12px;margin-top:4px}
+footer{text-align:center;color:var(--muted);font-size:11px;padding:15px}
+</style>
+</head>
+<body>
+
+<script>
+// فحص ترخيص التشغيل
+if(localStorage.getItem('omni_app_license_verified') !== 'true') {
+  alert('🔒 يجب تفعيل ترخيص التطبيق أولاً.');
+  window.location.href = 'activate.html';
+}
+</script>
+
+<header>
+  <h1>💾 النسخ الاحتياطي وحماية البيانات — السيد متولي</h1>
+  <p>مزرعة الإخلاص للإدارة الحديثة والدواجن</p>
+</header>
+
+<div class="marquee-container">
+  <marquee behavior="scroll" direction="right" scrollamount="4">
+    🌟 مزرعة الإخلاص للإدارة الحديثة والدواجن • إدارة: السيد متولي • حماية وسرية بيانات العملاء وتصدير النسخ الاحتياطية بكل آمان.
+  </marquee>
+</div>
+
+<!-- شريط التنقل بين الصفحات Ten Pages/Views -->
+<div class="nav-bar">
+  <a href="index.html">📌 المهام</a>
+  <a href="calc.html">📊 الحسابات</a>
+  <a href="setup.html">⚙️ الإعدادات</a>
+  <a href="feed.html">🌾 المخزن</a>
+  <a href="weight.html">⚖️ الأوزان</a>
+  <a href="vax.html">💉 التحصينات</a>
+  <a href="notes.html">🩺 البيطري</a>
+  <a href="backup.html" class="active">💾 النسخ</a>
+</div>
+
+<main>
+<div class="card">
+<h2>💾 تصدير نسخة احتياطية من البيانات</h2>
+<p class="muted">قم بتنزيل كافة بيانات الدورة الحالية (حسابات، مخزن، أوزان، تحصينات) لحفظها بأمان على هاتفك أو حاسوبك.</p>
+<button class="action" id="exportBtn" type="button">تصدير النسخة الاحتياطية (JSON) 📥</button>
+</div>
+
+<div class="card">
+<h2>📂 استرجاع نسخة احتياطية سابقة</h2>
+<p class="muted">اختر ملف النسخة الاحتياطية واستعد كافة بياناتك فوراً.</p>
+<label for="importFile">اختر ملف التصدير (JSON):</label>
+<input type="file" id="importFile" accept=".json">
+<button class="secondary" id="importBtn" type="button">استرجاع البيانات من الملف 📤</button>
+</div>
+
+<div class="card">
+<h2>⚠️ إعادة ضبط وتصفير بيانات الدورة</h2>
+<p class="muted">حذف كافة سجلات البيانات الحالية للدورة والبدء من جديد (لا يمكن التراجع بعد الحذف).</p>
+<button class="danger" id="clearBtn" type="button">حذف البيانات نهائياً 🗑️</button>
+</div>
+</main>
+
+<footer>متابع دورة الكتاكيت الاحترافي • تصميم وإدارة: السيد متولي</footer>
+
+<script>
+const activeKey = localStorage.getItem('omni_active_key') || 'default';
+const DBKEY = 'chick_app_data_' + activeKey;
+
+// تصدير النسخة الاحتياطية
+document.getElementById('exportBtn').onclick = () => {
+  let data = localStorage.getItem(DBKEY) || '{}';
+  let blob = new Blob([data], { type: 'application/json' });
+  let url = URL.createObjectURL(blob);
+  
+  let a = document.createElement('a');
+  a.href = url;
+  a.download = `chicks_backup_${activeKey}_${new Date().toISOString().slice(0,10)}.json`;
+  a.click();
+  URL.revokeObjectURL(url);
+};
+
+// استرجاع البيانات من ملف
+document.getElementById('importBtn').onclick = () => {
+  let fileInput = document.getElementById('importFile');
+  if(!fileInput.files.length) {
+    alert('الرجاء اختيار ملف النسخة الاحتياطية أولاً.');
+    return;
+  }
+  
+  let reader = new FileReader();
+  reader.onload = function(e) {
+    try {
+      let importedData = JSON.parse(e.target.result);
+      localStorage.setItem(DBKEY, JSON.stringify(importedData));
+      alert('🟢 تم استرجاع النسخة الاحتياطية بنجاح!');
+      window.location.href = 'index.html';
+    } catch(err) {
+      alert('🔴 خطأ: ملف النسخة الاحتياطية غير صالح.');
+    }
+  };
+  reader.readAsText(fileInput.files[0]);
+};
+
+// مسح البيانات
+document.getElementById('clearBtn').onclick = () => {
+  if(confirm('هل أنت متأكد تماماً من حذف كافة سجلات الدورة الحالية؟')) {
+    if(confirm('تأكيد أخير: سيتم مسح كافة البيانات المسجلة نهائياً!')) {
+      localStorage.removeItem(DBKEY);
+      alert('تم حذف البيانات بنجاح.');
+      window.location.href = 'index.html';
+    }
+  }
+};
+</script>
+<!-- سكربت استقبال البث والتحديثات المباشرة للشريط الدعائي -->
+<script>
+(function initBroadcastSystem() {
+  const BROADCAST_DB = 'omni_broadcast_messages';
+  const activeKey = localStorage.getItem('omni_active_key') || '';
+
+  function checkBroadcast() {
+    try {
+      let savedMsg = localStorage.getItem(BROADCAST_DB);
+      if (savedMsg) {
+        let msgObj = JSON.parse(savedMsg);
+        if (msgObj.target === 'ALL' || msgObj.target === activeKey) {
+          let marqueeContainer = document.querySelector('.marquee-container');
+          if (marqueeContainer) {
+            marqueeContainer.innerHTML = `<marquee behavior="scroll" direction="right" scrollamount="4">
+              ${msgObj.type}: ${msgObj.text} • إدارة: السيد متولي (مزرعة الإخلاص)
+            </marquee>`;
+          }
+        }
+      }
+    } catch (e) {}
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', checkBroadcast);
+  } else {
+    checkBroadcast();
+  }
+})();
+</script>
+
+</body>
+</html>

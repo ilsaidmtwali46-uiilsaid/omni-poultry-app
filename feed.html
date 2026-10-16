@@ -1,0 +1,383 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<title>إدارة المخزن والمشتريات - مزرعة الإخلاص</title>
+<style>
+:root{--green:#166534;--pale:#f0fdf4;--ink:#17211b;--muted:#64748b;--red:#b91c1c;--blue:#1d4ed8}
+*{box-sizing:border-box}
+body{margin:0;font-family:Tahoma,Arial,sans-serif;background:#f3f7f4;color:var(--ink);line-height:1.6;padding-bottom:50px}
+
+/* الهيدر والشريط الدعائي */
+header{background:linear-gradient(135deg,#14532d,#15803d);color:#fff;padding:12px 15px}
+header h1{margin:0;font-size:18px} header p{margin:2px 0 0;font-size:11px;opacity:.9}
+.marquee-container{background:#1e293b;color:#fbbf24;padding:6px 10px;font-size:12px;font-weight:bold;overflow:hidden;white-space:nowrap;border-bottom:2px solid #14532d}
+
+/* شريط التنقل العلوي بين الملفات */
+.nav-bar{
+  background: #ffffff;
+  display: flex;
+  gap: 5px;
+  overflow-x: auto;
+  padding: 10px;
+  box-shadow: 0 3px 8px rgba(0,0,0,0.15);
+  border-bottom: 2px solid #cbd5cf;
+  position: sticky;
+  top: 0;
+  z-index: 9999;
+}
+.nav-bar a{
+  white-space: nowrap;
+  border: 1px solid #166534;
+  background: #f0fdf4;
+  color: var(--green);
+  padding: 8px 14px;
+  border-radius: 8px;
+  font-weight: bold;
+  text-decoration: none;
+  font-size: 13px;
+  flex-shrink: 0;
+}
+.nav-bar a.active{
+  background: var(--green);
+  color: #fff;
+}
+
+main{max-width:980px;margin:auto;padding:10px}
+.card{background:#fff;border:1px solid #e0e7e2;border-radius:12px;padding:12px;margin-bottom:10px;box-shadow:0 1px 4px rgba(0,0,0,0.05)}
+h2{font-size:16px;margin:0 0 8px;color:var(--green)}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:8px}
+.stat{background:var(--pale);border-radius:10px;padding:10px}.stat small{display:block;color:var(--muted);font-size:11px}.stat strong{font-size:18px;color:var(--green)}
+label{display:block;font-size:12px;font-weight:bold;margin:6px 0 2px}
+input,select{width:100%;font:inherit;font-size:14px;padding:8px;border:1px solid #cbd5cf;border-radius:8px;background:#fff}
+button.action{border:0;border-radius:8px;background:var(--green);color:#fff;padding:9px 12px;font:inherit;font-weight:bold;margin-top:8px;cursor:pointer}
+button.danger{background:var(--red);color:#fff;cursor:pointer;border:0;border-radius:6px;padding:4px 8px}
+table{width:100%;border-collapse:collapse;font-size:12px;min-width:500px}
+.tablewrap{overflow-x:auto}
+th,td{border-bottom:1px solid #e5e7eb;padding:6px;text-align:right}
+th{background:#f0fdf4;color:#14532d}
+.muted{color:var(--muted);font-size:11px}
+footer{text-align:center;color:var(--muted);font-size:11px;padding:15px}
+</style>
+</head>
+<body>
+
+<script>
+// فحص ترخيص التشغيل
+if(localStorage.getItem('omni_app_license_verified') !== 'true') {
+  alert('🔒 يجب تفعيل ترخيص التطبيق أولاً.');
+  window.location.href = 'activate.html';
+}
+</script>
+
+<header>
+  <h1>🌾 إدارة المخزن والمشتريات — السيد متولي</h1>
+  <p>مزرعة الإخلاص للإدارة الحديثة والدواجن</p>
+</header>
+
+<div class="marquee-container">
+  <marquee behavior="scroll" direction="right" scrollamount="4">
+    🌟 مزرعة الإخلاص للإدارة الحديثة والدواجن • إدارة: السيد متولي • مراقبة المخزون، حركة العلف، المشتريات، والأصناف التالفة.
+  </marquee>
+</div>
+
+<!-- شريط التنقل بين الصفحات Ten Pages/Views -->
+<div class="nav-bar">
+  <a href="index.html">📌 المهام</a>
+  <a href="calc.html">📊 الحسابات</a>
+  <a href="setup.html">⚙️ الإعدادات</a>
+  <a href="feed.html" class="active">🌾 المخزن</a>
+  <a href="weight.html">⚖️ الأوزان</a>
+  <a href="vax.html">💉 التحصينات</a>
+  <a href="notes.html">🩺 البيطري</a>
+  <a href="backup.html">💾 النسخ</a>
+</div>
+
+<main>
+<div class="card">
+<h2>🌾 مؤشرات رصيد العلف بالمخزن</h2>
+<div class="grid">
+<div class="stat"><small>إجمالي مشتريات العلف</small><strong id="purchTot">0 كجم</strong></div>
+<div class="stat"><small>إجمالي المسحوب والمستورد</small><strong id="feedTot">0 كجم</strong></div>
+<div class="stat"><small>رصيد العلف المتبقي بالمخزن</small><strong id="stockBal">0 كجم</strong></div>
+</div>
+</div>
+
+<div class="card">
+<h2>أولاً: تسجيل مشتريات جديدة للمخزن</h2>
+<div class="grid">
+<div><label>التاريخ</label><input id="purchDate" type="date"></div>
+<div><label>تصنيف الصنف</label><select id="purchCategory">
+<option value="علف بادئ">علف بادئ</option>
+<option value="علف نامي">علف نامي</option>
+<option value="علف ناهي">علف ناهي</option>
+<option value="أدوية بيطرية">أدوية بيطرية</option>
+<option value="أدوات استهلاكية">أدوات استهلاكية (خامات/مستهلكات)</option>
+<option value="أدوات مستدامة">أدوات مستدامة (أصول/ثوابت)</option>
+</select></div>
+<div><label>الكمية / العدد</label><input id="purchQty" type="number" step="0.1" placeholder="مثال: 50 كجم أو 2 عبوة"></div>
+<div><label>سعر الوحدة (جنيه)</label><input id="purchPrice" type="number" step="0.5" value="28"></div>
+<div><label>طريقة الدفع</label><select id="purchPay"><option value="كاش">كاش</option><option value="آجل (دين)">آجل (دين)</option></select></div>
+</div>
+<label>بيانات أو ملاحظات إضافية</label>
+<input id="purchMemo" placeholder="اسم الدواء أو نوع الأدوات...">
+<button class="action" id="addPurchBtn" type="button">إضافة للمخزن والمشتريات</button>
+</div>
+
+<div class="card">
+<h2>ثانياً: تسجيل سحب واستهلاك العلف اليومي</h2>
+<div class="grid">
+<div><label>تاريخ السحب</label><input id="feedDate" type="date"></div>
+<div><label>نوع العلف المسحوب</label><select id="feedStage"><option value="علف بادئ">علف بادئ</option><option value="علف نامي">علف نامي</option><option value="علف ناهي">علف ناهي</option></select></div>
+<div><label>الكمية المقدمة (كجم)</label><input id="feedKg" type="number" step="0.1" placeholder="10"></div>
+<div><label>المتبقي غير المأكول (كجم)</label><input id="feedLeft" type="number" step="0.1" value="0"></div>
+</div>
+<button class="action" id="addFeedBtn" type="button">تسجيل السحب من المخزن</button>
+</div>
+
+<div class="card">
+<h2>ثالثاً: تسجيل خصم الأصناف والأدوات التالفة</h2>
+<div class="grid">
+<div><label>تاريخ التلف</label><input id="wasteDate" type="date"></div>
+<div><label>اسم الصنف التالف</label><input id="wasteItemName" placeholder="ترمومتر / سقاية / دواء..."></div>
+<div><label>الكمية المخصومة</label><input id="wasteQty" type="number" step="0.1" placeholder="1"></div>
+<div><label>سبب التلف</label><input id="wasteReason" placeholder="كسر / انتهاء صلاحية..."></div>
+</div>
+<button class="action danger" id="addWasteBtn" type="button" style="background:var(--red)">خصم الصنف التالف</button>
+</div>
+
+<div class="card">
+<h2>سجل مشتريات المخزن الكلية</h2>
+<div class="tablewrap">
+<table>
+<thead>
+<tr>
+<th>التاريخ</th>
+<th>التصنيف</th>
+<th>الكمية</th>
+<th>السعر</th>
+<th>الإجمالي</th>
+<th>الدفع</th>
+<th>ملاحظات</th>
+<th>إجراء</th>
+</tr>
+</thead>
+<tbody id="purchRows">
+<tr><td colspan="8" class="muted">لا توجد مشتريات مسجلة.</td></tr>
+</tbody>
+</table>
+</div>
+
+<h3>سجل سحب العلف اليومي</h3>
+<div class="tablewrap">
+<table>
+<thead>
+<tr>
+<th>التاريخ</th>
+<th>المرحلة</th>
+<th>المستهلك الفعلي</th>
+<th>إجراء</th>
+</tr>
+</thead>
+<tbody id="feedRows">
+<tr><td colspan="4" class="muted">لا توجد عمليات سحب مسجلة.</td></tr>
+</tbody>
+</table>
+</div>
+
+<h3>سجل الأصناف والأدوات التالفة</h3>
+<div class="tablewrap">
+<table>
+<thead>
+<tr>
+<th>التاريخ</th>
+<th>الصنف التالف</th>
+<th>الكمية</th>
+<th>السبب</th>
+<th>إجراء</th>
+</tr>
+</thead>
+<tbody id="wasteRows">
+<tr><td colspan="5" class="muted">لا توجد أصناف تالفة مسجلة.</td></tr>
+</tbody>
+</table>
+</div>
+</div>
+</main>
+
+<footer>متابع دورة الكتاكيت الاحترافي • تصميم وإدارة: السيد متولي</footer>
+
+<script>
+const $=id=>document.getElementById(id);
+
+// مفتاح العميل الخاص للخصوصية
+const activeKey = localStorage.getItem('omni_active_key') || 'default';
+const DBKEY = 'chick_app_data_' + activeKey;
+
+let db = { purchases:[], feeds:[], wasteItems:[] };
+
+function today(){ return new Date().toISOString().slice(0,10); }
+
+function loadData(){
+  try{
+    let saved = localStorage.getItem(DBKEY);
+    if(saved) db = JSON.parse(saved);
+  }catch(e){}
+  
+  $('purchDate').value = today();
+  $('feedDate').value = today();$('wasteDate').value = today();
+  
+  renderAll();
+}
+
+function saveData(){
+  try{
+    localStorage.setItem(DBKEY, JSON.stringify(db));
+    renderAll();
+  }catch(e){ alert('خطأ في حفظ البيانات'); }
+}
+
+function renderAll(){
+  // إحصائيات العلف
+  let purchFeedKg = (db.purchases || []).filter(p => (p.category || '').includes('علف')).reduce((sum, x) => sum + (x.qty || 0), 0);
+  let feedTotKg = (db.feeds || []).reduce((sum, x) => sum + Math.max(0, (x.kg || 0) - (x.left || 0)), 0);
+  let stockRem = purchFeedKg - feedTotKg;
+  
+  $('purchTot').textContent = purchFeedKg.toFixed(1) + ' كجم';
+  $('feedTot').textContent = feedTotKg.toFixed(1) + ' كجم';
+  $('stockBal').textContent = stockRem.toFixed(1) + ' كجم';
+  
+  // جدول المشتريات
+  let pRows = (db.purchases || []).map((x, i) => `
+    <tr>
+      <td>${x.date}</td>
+      <td>${x.category}</td>
+      <td>${x.qty}</td>
+      <td>${x.price} ج.م</td>
+      <td>${((x.qty||0)*(x.price||0)).toFixed(2)} ج.م</td>
+      <td>${x.pay}</td>
+      <td>${x.memo || '—'}</td>
+      <td><button class="danger" onclick="delItem('purchases', ${i})" type="button">حذف</button></td>
+    </tr>
+  `).join('');
+  $('purchRows').innerHTML = pRows || '<tr><td colspan="8" class="muted">لا توجد مشتريات مسجلة.</td></tr>';
+  
+  // جدول السحب
+  let fRows = (db.feeds || []).map((x, i) => `
+    <tr>
+      <td>${x.date}</td>
+      <td>${x.stage}</td>
+      <td>${Math.max(0, (x.kg||0) - (x.left||0)).toFixed(1)} كجم</td>
+      <td><button class="danger" onclick="delItem('feeds', ${i})" type="button">حذف</button></td>
+    </tr>
+  `).join('');
+  $('feedRows').innerHTML = fRows || '<tr><td colspan="4" class="muted">لا توجد عمليات سحب مسجلة.</td></tr>';
+  
+  // جدول التالف
+  let wRows = (db.wasteItems || []).map((x, i) => `
+    <tr>
+      <td>${x.date}</td>
+      <td>${x.itemName}</td>
+      <td>${x.qty}</td>
+      <td>${x.reason}</td>
+      <td><button class="danger" onclick="delItem('wasteItems', ${i})" type="button">حذف</button></td>
+    </tr>
+  `).join('');
+  $('wasteRows').innerHTML = wRows || '<tr><td colspan="5" class="muted">لا توجد أصناف تالفة مسجلة.</td></tr>';
+}
+
+$('addPurchBtn').onclick = () => {
+  let qty = parseFloat($('purchQty').value) || 0;
+  let price = parseFloat($('purchPrice').value) || 0;
+  if(qty <= 0){ alert('الرجاء إدخال كمية صحيحة.'); return; }
+  
+  if(!db.purchases) db.purchases = [];
+  db.purchases.push({
+    date: $('purchDate').value,
+    category: $('purchCategory').value,
+    qty,
+    price,
+    pay: $('purchPay').value,
+    memo: $('purchMemo').value.trim()
+  });
+  
+  $('purchQty').value = '';$('purchMemo').value = '';
+  saveData();
+  alert('🟢 تم إضافة الشراء إلى المخزن والسجل بنجاح!');
+};
+
+$('addFeedBtn').onclick = () => {
+  let kg = parseFloat($('feedKg').value) || 0;
+  let left = parseFloat($('feedLeft').value) || 0;
+  if(kg <= 0){ alert('الرجاء إدخال كمية سحب صحيحة.'); return; }
+  
+  if(!db.feeds) db.feeds = [];
+  db.feeds.push({ date: $('feedDate').value, stage:$('feedStage').value, kg, left });
+  
+  $('feedKg').value = '';$('feedLeft').value = '0';
+  saveData();
+  alert('🟢 تم تسجيل سحب العلف بنجاح!');
+};
+
+$('addWasteBtn').onclick = () => {
+  let itemName = $('wasteItemName').value.trim();
+  let qty = parseFloat($('wasteQty').value) || 0;
+  if(!itemName || qty <= 0){ alert('أدخل اسم الصنف التالف والكمية بشكل صحيح.'); return; }
+  
+  if(!db.wasteItems) db.wasteItems = [];
+  db.wasteItems.push({
+    date: $('wasteDate').value,
+    itemName,
+    qty,
+    reason: $('wasteReason').value.trim() || 'تلف واستبعاد'
+  });
+  
+  $('wasteItemName').value = '';
+  $('wasteQty').value = '';$('wasteReason').value = '';
+  saveData();
+  alert('🔴 تم خصم الصنف التالف من المخزن وإثباته بالسجل.');
+};
+
+window.delItem = (type, index) => {
+  if(confirm('هل تريد حذف هذه الحركة؟')){
+    db[type].splice(index, 1);
+    saveData();
+  }
+};
+
+loadData();
+</script>
+<!-- سكربت استقبال البث والتحديثات المباشرة للشريط الدعائي -->
+<script>
+(function initBroadcastSystem() {
+  const BROADCAST_DB = 'omni_broadcast_messages';
+  const activeKey = localStorage.getItem('omni_active_key') || '';
+
+  function checkBroadcast() {
+    try {
+      let savedMsg = localStorage.getItem(BROADCAST_DB);
+      if (savedMsg) {
+        let msgObj = JSON.parse(savedMsg);
+        if (msgObj.target === 'ALL' || msgObj.target === activeKey) {
+          let marqueeContainer = document.querySelector('.marquee-container');
+          if (marqueeContainer) {
+            marqueeContainer.innerHTML = `<marquee behavior="scroll" direction="right" scrollamount="4">
+              ${msgObj.type}: ${msgObj.text} • إدارة: السيد متولي (مزرعة الإخلاص)
+            </marquee>`;
+          }
+        }
+      }
+    } catch (e) {}
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', checkBroadcast);
+  } else {
+    checkBroadcast();
+  }
+})();
+</script>
+
+</body>
+</html>

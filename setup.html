@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<title>إعدادات الدورة والنفوق - مزرعة الإخلاص</title>
+<style>
+:root{--green:#166534;--pale:#f0fdf4;--ink:#17211b;--muted:#64748b;--red:#b91c1c;--blue:#1d4ed8}
+*{box-sizing:border-box}
+body{margin:0;font-family:Tahoma,Arial,sans-serif;background:#f3f7f4;color:var(--ink);line-height:1.6;padding-bottom:50px}
+
+/* الهيدر والشريط الدعائي */
+header{background:linear-gradient(135deg,#14532d,#15803d);color:#fff;padding:12px 15px}
+header h1{margin:0;font-size:18px} header p{margin:2px 0 0;font-size:11px;opacity:.9}
+.marquee-container{background:#1e293b;color:#fbbf24;padding:6px 10px;font-size:12px;font-weight:bold;overflow:hidden;white-space:nowrap;border-bottom:2px solid #14532d}
+
+/* شريط التنقل العلوي بين الملفات */
+.nav-bar{
+  background: #ffffff;
+  display: flex;
+  gap: 5px;
+  overflow-x: auto;
+  padding: 10px;
+  box-shadow: 0 3px 8px rgba(0,0,0,0.15);
+  border-bottom: 2px solid #cbd5cf;
+  position: sticky;
+  top: 0;
+  z-index: 9999;
+}
+.nav-bar a{
+  white-space: nowrap;
+  border: 1px solid #166534;
+  background: #f0fdf4;
+  color: var(--green);
+  padding: 8px 14px;
+  border-radius: 8px;
+  font-weight: bold;
+  text-decoration: none;
+  font-size: 13px;
+  flex-shrink: 0;
+}
+.nav-bar a.active{
+  background: var(--green);
+  color: #fff;
+}
+
+main{max-width:980px;margin:auto;padding:10px}
+.card{background:#fff;border:1px solid #e0e7e2;border-radius:12px;padding:12px;margin-bottom:10px;box-shadow:0 1px 4px rgba(0,0,0,0.05)}
+h2{font-size:16px;margin:0 0 8px;color:var(--green)}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:8px}
+label{display:block;font-size:12px;font-weight:bold;margin:6px 0 2px}
+input,select{width:100%;font:inherit;font-size:14px;padding:8px;border:1px solid #cbd5cf;border-radius:8px;background:#fff}
+button.action{border:0;border-radius:8px;background:var(--green);color:#fff;padding:9px 12px;font:inherit;font-weight:bold;margin-top:8px;cursor:pointer}
+button.danger{background:var(--red);color:#fff;cursor:pointer;border:0;border-radius:6px;padding:4px 8px}
+table{width:100%;border-collapse:collapse;font-size:12px;min-width:450px}
+.tablewrap{overflow-x:auto}
+th,td{border-bottom:1px solid #e5e7eb;padding:6px;text-align:right}
+th{background:#f0fdf4;color:#14532d}
+.muted{color:var(--muted);font-size:11px}
+footer{text-align:center;color:var(--muted);font-size:11px;padding:15px}
+</style>
+</head>
+<body>
+
+<script>
+// فحص ترخيص التشغيل
+if(localStorage.getItem('omni_app_license_verified') !== 'true') {
+  alert('🔒 يجب تفعيل ترخيص التطبيق أولاً.');
+  window.location.href = 'activate.html';
+}
+</script>
+
+<header>
+  <h1>⚙️ إعدادات الدورة والمصروفات — السيد متولي</h1>
+  <p>مزرعة الإخلاص للإدارة الحديثة والدواجن</p>
+</header>
+
+<div class="marquee-container">
+  <marquee behavior="scroll" direction="right" scrollamount="4">
+    🌟 مزرعة الإخلاص للإدارة الحديثة والدواجن • إدارة: السيد متولي • ضبط التكاليف والنفوق ومصروفات التشغيل بكل دقة.
+  </marquee>
+</div>
+
+<!-- شريط التنقل بين الصفحات Ten Pages/Views -->
+<div class="nav-bar">
+  <a href="index.html">📌 المهام</a>
+  <a href="calc.html">📊 الحسابات</a>
+  <a href="setup.html" class="active">⚙️ الإعدادات</a>
+  <a href="feed.html">🌾 المخزن</a>
+  <a href="weight.html">⚖️ الأوزان</a>
+  <a href="vax.html">💉 التحصينات</a>
+  <a href="notes.html">🩺 البيطري</a>
+  <a href="backup.html">💾 النسخ</a>
+</div>
+
+<main>
+<div class="card">
+<h2>⚙️ إعدادات الدورة وتسجيل النفوق</h2>
+<div class="grid">
+<div><label>اسم الدورة</label><input id="cycleName" value="دورة 1"></div>
+<div><label>تاريخ البدء</label><input id="startDate" type="date"></div>
+<div><label>عدد الكتاكيت عند البداية</label><input id="chicks" type="number" value="15"></div>
+<div><label>سعر شراء الكتكوت الواحد (جنيه)</label><input id="chickPrice" type="number" value="36"></div>
+<div><label>سعر العلف الافتراضي (جنيه)</label><input id="feedPrice" type="number" value="28"></div>
+<div><label>عدد الطيور النافقة حتى الآن</label><input id="dead" type="number" value="0"></div>
+</div>
+<button class="action" id="saveSetupBtn" type="button">حفظ بيانات الدورة والنفوق</button>
+</div>
+
+<div class="card">
+<h2>تسجيل مصروفات تشغيل أخرى (كهرباء، غاز، عمالة)</h2>
+<div class="grid">
+<div><label>تاريخ المصروف</label><input id="expDate" type="date"></div>
+<div><label>بيان المصروف</label><input id="expTitle" placeholder="مثال: فاتورة كهرباء / أنابيب غاز"></div>
+<div><label>المبلغ (جنيه)</label><input id="expAmount" type="number" step="0.5" placeholder="100"></div>
+</div>
+<button class="action" id="addExpBtn" type="button">إضافة المصروف للسجل</button>
+
+<h3>سجل المصروفات التشغيلية</h3>
+<div class="tablewrap">
+<table>
+<thead>
+<tr>
+<th>التاريخ</th>
+<th>البيان</th>
+<th>المبلغ</th>
+<th>إجراء</th>
+</tr>
+</thead>
+<tbody id="expRows">
+<tr><td colspan="4" class="muted">لا توجد مصروفات مسجلة.</td></tr>
+</tbody>
+</table>
+</div>
+</div>
+</main>
+
+<footer>متابع دورة الكتاكيت الاحترافي • تصميم وإدارة: السيد متولي</footer>
+
+<script>
+const $=id=>document.getElementById(id);
+
+// مفتاح العميل الخاص للخصوصية
+const activeKey = localStorage.getItem('omni_active_key') || 'default';
+const DBKEY = 'chick_app_data_' + activeKey;
+
+let db = { setup:{}, expenses:[] };
+
+function today(){ return new Date().toISOString().slice(0,10); }
+
+function loadData(){
+  try{
+    let saved = localStorage.getItem(DBKEY);
+    if(saved) db = JSON.parse(saved);
+  }catch(e){}
+  
+  let st = db.setup || {};
+  $('cycleName').value = st.cycleName || 'دورة 1';
+  $('startDate').value = st.startDate \vert{}\vert{} today();$('chicks').value = st.chicks || 15;
+  $('chickPrice').value = st.chickPrice || 36;
+  $('feedPrice').value = st.feedPrice || 28;
+  $('dead').value = st.dead || 0;
+  $('expDate').value = today();
+  
+  renderExpenses();
+}
+
+function saveData(){
+  try{
+    localStorage.setItem(DBKEY, JSON.stringify(db));
+    renderExpenses();
+  }catch(e){ alert('خطأ في حفظ البيانات'); }
+}
+
+$('saveSetupBtn').onclick = () => {
+  db.setup = {
+    cycleName: $('cycleName').value,
+    startDate: $('startDate').value,
+    chicks: parseFloat($('chicks').value) || 0,
+    chickPrice: parseFloat($('chickPrice').value) || 0,
+    feedPrice: parseFloat($('feedPrice').value) || 0,
+    dead: parseFloat($('dead').value) || 0
+  };
+  saveData();
+  alert('🟢 تم حفظ إعدادات الدورة والنفوق بنجاح!');
+};
+
+$('addExpBtn').onclick = () => {
+  let title = $('expTitle').value.trim();
+  let amount = parseFloat($('expAmount').value) || 0;
+  if(!title || amount <= 0){
+    alert('الرجاء إدخال بيان المصروف والمبلغ بشكل صحيح.');
+    return;
+  }
+  
+  if(!db.expenses) db.expenses = [];
+  db.expenses.push({ date: $('expDate').value, title, amount });
+  $('expTitle').value = '';$('expAmount').value = '';
+  saveData();
+};
+
+function renderExpenses(){
+  let html = (db.expenses || []).map((x, i) => `
+    <tr>
+      <td>${x.date}</td>
+      <td>${x.title}</td>
+      <td>${x.amount.toFixed(2)} ج.م</td>
+      <td><button class="danger" onclick="delExp(${i})" type="button">حذف</button></td>
+    </tr>
+  `).join('');
+  
+  $('expRows').innerHTML = html || '<tr><td colspan="4" class="muted">لا توجد مصروفات مسجلة.</td></tr>';
+}
+
+window.delExp = (index) => {
+  if(confirm('هل تريد حذف هذا المصروف؟')){
+    db.expenses.splice(index, 1);
+    saveData();
+  }
+};
+
+loadData();
+</script>
+<!-- سكربت استقبال البث والتحديثات المباشرة للشريط الدعائي -->
+<script>
+(function initBroadcastSystem() {
+  const BROADCAST_DB = 'omni_broadcast_messages';
+  const activeKey = localStorage.getItem('omni_active_key') || '';
+
+  function checkBroadcast() {
+    try {
+      let savedMsg = localStorage.getItem(BROADCAST_DB);
+      if (savedMsg) {
+        let msgObj = JSON.parse(savedMsg);
+        if (msgObj.target === 'ALL' || msgObj.target === activeKey) {
+          let marqueeContainer = document.querySelector('.marquee-container');
+          if (marqueeContainer) {
+            marqueeContainer.innerHTML = `<marquee behavior="scroll" direction="right" scrollamount="4">
+              ${msgObj.type}: ${msgObj.text} • إدارة: السيد متولي (مزرعة الإخلاص)
+            </marquee>`;
+          }
+        }
+      }
+    } catch (e) {}
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', checkBroadcast);
+  } else {
+    checkBroadcast();
+  }
+})();
+</script>
+
+</body>
+</html>

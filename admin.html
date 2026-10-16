@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<title>لوحة إدارة التراخيص والبث المباشر — السيد متولي</title>
+<style>
+:root{--green:#166534;--pale:#f0fdf4;--ink:#17211b;--muted:#64748b;--red:#b91c1c;--blue:#1d4ed8}
+*{box-sizing:border-box}
+body{margin:0;font-family:Tahoma,Arial,sans-serif;background:#f3f7f4;color:var(--ink);line-height:1.6;padding-bottom:50px}
+
+header{background:linear-gradient(135deg,#0f172a,#1e293b);color:#fbbf24;padding:15px;text-align:center;border-bottom:3px solid var(--green)}
+header h1{margin:0;font-size:20px} header p{margin:4px 0 0;font-size:12px;color:#cbd5e1}
+
+main{max-width:850px;margin:20px auto;padding:10px}
+.card{background:#fff;border:1px solid #cbd5cf;border-radius:12px;padding:16px;margin-bottom:15px;box-shadow:0 2px 6px rgba(0,0,0,0.08)}
+h2{font-size:16px;margin:0 0 10px;color:var(--green);border-bottom:1px solid #e2e8f0;padding-bottom:6px}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:10px}
+label{display:block;font-size:12px;font-weight:bold;margin:6px 0 2px}
+input,select,textarea{width:100%;font:inherit;font-size:14px;padding:8px;border:1px solid #cbd5cf;border-radius:8px;background:#fff}
+button.action{border:0;border-radius:8px;background:var(--green);color:#fff;padding:10px 14px;font:inherit;font-weight:bold;margin-top:10px;cursor:pointer;width:100%}
+button.secondary{background:#1e293b;color:#fbbf24;border:0;cursor:pointer;padding:6px 10px;border-radius:6px;font-size:12px;font-weight:bold}
+button.danger{background:var(--red);color:#fff;cursor:pointer;border:0;border-radius:6px;padding:4px 8px;font-size:12px}
+
+table{width:100%;border-collapse:collapse;font-size:12px;margin-top:8px}
+.tablewrap{overflow-x:auto}
+th,td{border-bottom:1px solid #e5e7eb;padding:8px;text-align:right}
+th{background:#f1f5f9;color:#334155}
+.key-box{background:#f8fafc;border:1px dashed #94a3b8;padding:8px;border-radius:6px;font-family:monospace;font-weight:bold;font-size:14px;color:var(--blue);text-align:center;margin-top:6px}
+.muted{color:var(--muted);font-size:11px}
+footer{text-align:center;color:var(--muted);font-size:11px;padding:15px}
+</style>
+</head>
+<body>
+
+<header>
+  <h1>👑 لوحة إدارة التراخيص والبث المباشر — السيد متولي</h1>
+  <p>إدارة التفعيل والشريط الدعائي والتنبيهات للعملاء (مزرعة الإخلاص)</p>
+</header>
+
+<main>
+
+<div class="card" style="border-right: 5px solid var(--blue);">
+<h2>📢 التحكم بالشريط الدعائي والتنبيهات (السحابية)</h2>
+<div class="grid">
+<div>
+  <label>نطاق الإرسال</label>
+  <select id="msgTarget">
+    <option value="ALL">🌐 إرسال عام للجميع (كل العملاء والمزارع)</option>
+  </select>
+</div>
+<div>
+  <label>نوع التنبيه / التصنيف</label>
+  <select id="msgType">
+    <option value="📢 تلميح وإرشاد">📢 تلميح وإرشاد هام</option>
+    <option value="🌟 إعلان وعرض">🌟 إعلان وعرض خاص بـ مزرعة الإخلاص</option>
+    <option value="⚠️ تنبيه عاجل">⚠️ تنبيه بيطري عاجل</option>
+    <option value="🔔 إشعار إداري">🔔 إشعار تجديد ترخيص</option>
+  </select>
+</div>
+</div>
+
+<label style="margin-top:8px">نص التلميح / الإعلان للشريط المتحرك</label>
+<textarea id="msgText" rows="2" placeholder="اكتب التلميح أو التنبيه هنا..."></textarea>
+
+<button class="action" id="publishMsgBtn" type="button" style="background:var(--blue)">نشر التلميح على كافة التطبيقات 🚀</button>
+</div>
+
+<div class="card">
+<h2>🔑 إنشاء كود تفعيل ترخيص جديد لعميل</h2>
+<div class="grid">
+<div><label>اسم العميل / المزرعة</label><input id="clientName" placeholder="مثال: مزرعة البركة"></div>
+<div><label>رقم الهاتف / التواصل</label><input id="clientPhone" placeholder="010xxxxxxx"></div>
+<div><label>نوع الترخيص</label><select id="licenseType">
+<option value="دورة واحدة">دورة واحدة (45 يوم)</option>
+<option value="سنوي">ترخيص سنوي (365 يوم)</option>
+<option value="دائم">ترخيص دائم بدون حد</option>
+</select></div>
+</div>
+
+<button class="action" id="generateKeyBtn" type="button">توليد كود التفعيل والحفظ سحابياً ⚡</button>
+
+<div id="resultBox" style="display:none; margin-top:12px;">
+  <label>كود التفعيل المولّد (قم بنسخه وإرساله للعميل):</label>
+  <div class="key-box" id="generatedKeyDisplay">MOTAWALLY-2026-XXXX</div>
+  <button class="secondary" id="copyKeyBtn" type="button" style="margin-top:6px; width:100%">نسخ الكود للحافظة Clipboard 📋</button>
+</div>
+</div>
+
+<div class="card">
+<h2>📋 سجل التراخيص المعتمدة في السحاب</h2>
+<div class="tablewrap">
+<table>
+<thead>
+<tr>
+<th>التاريخ</th>
+<th>اسم العميل</th>
+<th>الهاتف</th>
+<th>النوع</th>
+<th>كود التفعيل (License Key)</th>
+<th>إجراء</th>
+</tr>
+</thead>
+<tbody id="keysRows">
+<tr><td colspan="6" class="muted">جاري تحميل سجل الأكواد من السحاب...</td></tr>
+</tbody>
+</table>
+</div>
+</div>
+</main>
+
+<footer>نظام الإدارة المركزية • تصميم وتطوير: السيد متولي</footer>
+
+<script>
+const DB_URL = "https://tracking-52992-default-rtdb.firebaseio.com/";
+const $=id=>document.getElementById(id);
+let masterKeys = {};
+
+// جلب التراخيص المسجلة من السحاب
+function fetchKeys(){
+  fetch(`${DB_URL}licenses.json`)
+    .then(res => res.json())
+    .then(data => {
+      masterKeys = data || {};
+      renderKeys();
+      updateClientDropdown();
+    })
+    .catch(err => console.error(err));
+}
+
+function updateClientDropdown(){
+  let select = $('msgTarget');
+  select.innerHTML = '<option value="ALL">🌐 إرسال عام للجميع (كل العملاء والمزارع)</option>';
+  Object.keys(masterKeys).forEach(kId => {
+    let item = masterKeys[kId];
+    select.innerHTML += `<option value="${item.key}">🎯 مخصص لـ: ${item.name} (${item.key})</option>`;
+  });
+}
+
+function renderKeys(){
+  let keysArr = Object.keys(masterKeys);
+  if(keysArr.length === 0){
+    $('keysRows').innerHTML = '<tr><td colspan="6" class="muted">لا توجد تراخيص مسجلة حتى الآن.</td></tr>';
+    return;
+  }
+  let html = keysArr.map(id => {
+    let x = masterKeys[id];
+    return `
+      <tr>
+        <td>${x.date}</td>
+        <td><b>${x.name}</b></td>
+        <td>${x.phone}</td>
+        <td>${x.type}</td>
+        <td><code style="color:var(--blue);font-weight:bold">${x.key}</code></td>
+        <td><button class="danger" onclick="delKey('${id}')" type="button">حذف</button></td>
+      </tr>
+    `;
+  }).join('');
+  
+  $('keysRows').innerHTML = html;
+}
+
+// نشر البث للشريط المتحرك
+$('publishMsgBtn').onclick = () => {
+  let target = $('msgTarget').value;
+  let type = $('msgType').value;
+  let text = $('msgText').value.trim();
+  
+  if(!text){ alert('الرجاء كتابة نص التلميح أو الإعلان أولاً.'); return; }
+  
+  let broadcastData = {
+    target: target,
+    type: type,
+    text: text,
+    timestamp: new Date().getTime()
+  };
+  
+  fetch(`${DB_URL}broadcast.json`, {
+    method: 'PUT',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(broadcastData)
+  }).then(() => {
+    alert('🟢 تم نشر التلميح على قاعدة البيانات السحابية بنجاح! سيظهر لجميع العملاء فوراً.');
+    $('msgText').value = '';
+  });
+};
+
+// إنشاء مفتاح وتخزينه في Firebase
+$('generateKeyBtn').onclick = () => {
+  let name = $('clientName').value.trim();
+  let phone = $('clientPhone').value.trim();
+  let type = $('licenseType').value;
+  
+  if(!name){ alert('الرجاء إدخال اسم العميل أو المزرعة.'); return; }
+  
+  let randomPart = Math.floor(1000 + Math.random() * 9000);
+  let newKey = 'OMNI-' + name.substring(0,3).toUpperCase() + '-' + randomPart;
+  
+  let newRecord = {
+    date: new Date().toISOString().slice(0,10),
+    name,
+    phone: phone || '—',
+    type,
+    key: newKey,
+    active: true
+  };
+  
+  fetch(`${DB_URL}licenses.json`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(newRecord)
+  }).then(() => {
+    fetchKeys();
+    $('generatedKeyDisplay').textContent = newKey;
+    $('resultBox').style.display = 'block';
+    $('clientName').value = '';$('clientPhone').value = '';
+  });
+};
+
+$('copyKeyBtn').onclick = () => {
+  let keyText = $('generatedKeyDisplay').textContent;
+  navigator.clipboard.writeText(keyText).then(() => {
+    alert('🟢 تم نسخ كود التفعيل للحافظة بنجاح!\nالكود: ' + keyText);
+  });
+};
+
+window.delKey = (id) => {
+  if(confirm('هل تريد إلغاء وإزالة هذا الترخيص من السجل؟')){
+    fetch(`${DB_URL}licenses/${id}.json`, { method: 'DELETE' })
+      .then(() => fetchKeys());
+  }
+};
+
+fetchKeys();
+</script>
+</body>
+</html>

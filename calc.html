@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<title>الحسابات والمحاسبة المالية - مزرعة الإخلاص</title>
+<style>
+:root{--green:#166534;--pale:#f0fdf4;--ink:#17211b;--muted:#64748b;--red:#b91c1c;--blue:#1d4ed8}
+*{box-sizing:border-box}
+body{margin:0;font-family:Tahoma,Arial,sans-serif;background:#f3f7f4;color:var(--ink);line-height:1.6;padding-bottom:50px}
+
+/* الهيدر والشريط الدعائي */
+header{background:linear-gradient(135deg,#14532d,#15803d);color:#fff;padding:12px 15px}
+header h1{margin:0;font-size:18px} header p{margin:2px 0 0;font-size:11px;opacity:.9}
+.marquee-container{background:#1e293b;color:#fbbf24;padding:6px 10px;font-size:12px;font-weight:bold;overflow:hidden;white-space:nowrap;border-bottom:2px solid #14532d}
+
+/* شريط التنقل العلوي بين الملفات */
+.nav-bar{
+  background: #ffffff;
+  display: flex;
+  gap: 5px;
+  overflow-x: auto;
+  padding: 10px;
+  box-shadow: 0 3px 8px rgba(0,0,0,0.15);
+  border-bottom: 2px solid #cbd5cf;
+  position: sticky;
+  top: 0;
+  z-index: 9999;
+}
+.nav-bar a{
+  white-space: nowrap;
+  border: 1px solid #166534;
+  background: #f0fdf4;
+  color: var(--green);
+  padding: 8px 14px;
+  border-radius: 8px;
+  font-weight: bold;
+  text-decoration: none;
+  font-size: 13px;
+  flex-shrink: 0;
+}
+.nav-bar a.active{
+  background: var(--green);
+  color: #fff;
+}
+
+main{max-width:980px;margin:auto;padding:10px}
+.card{background:#fff;border:1px solid #e0e7e2;border-radius:12px;padding:12px;margin-bottom:10px;box-shadow:0 1px 4px rgba(0,0,0,0.05)}
+h2{font-size:16px;margin:0 0 8px;color:var(--green)}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:8px}
+.stat{background:var(--pale);border-radius:10px;padding:10px}.stat small{display:block;color:var(--muted);font-size:11px}.stat strong{font-size:18px;color:var(--green)}
+label{display:block;font-size:12px;font-weight:bold;margin:6px 0 2px}
+input,select{width:100%;font:inherit;font-size:14px;padding:8px;border:1px solid #cbd5cf;border-radius:8px;background:#fff}
+table{width:100%;border-collapse:collapse;font-size:12px;min-width:500px}
+.tablewrap{overflow-x:auto}
+th,td{border-bottom:1px solid #e5e7eb;padding:6px;text-align:right}
+th{background:#f0fdf4;color:#14532d}
+.muted{color:var(--muted);font-size:11px}
+footer{text-align:center;color:var(--muted);font-size:11px;padding:15px}
+</style>
+</head>
+<body>
+
+<script>
+// فحص ترخيص التشغيل
+if(localStorage.getItem('omni_app_license_verified') !== 'true') {
+  alert('🔒 يجب تفعيل ترخيص التطبيق أولاً.');
+  window.location.href = 'activate.html';
+}
+</script>
+
+<header>
+  <h1>📊 السجل المحاسبي والمالي — السيد متولي</h1>
+  <p>مزرعة الإخلاص للإدارة الحديثة والدواجن</p>
+</header>
+
+<div class="marquee-container">
+  <marquee behavior="scroll" direction="right" scrollamount="4">
+    🌟 مزرعة الإخلاص للإدارة الحديثة والدواجن • إدارة: السيد متولي • حاسبة التكاليف والأرباح والتأمين المالي للقطيع.
+  </marquee>
+</div>
+
+<!-- شريط التنقل بين الصفحات Ten Pages/Views -->
+<div class="nav-bar">
+  <a href="index.html">📌 المهام</a>
+  <a href="calc.html" class="active">📊 الحسابات</a>
+  <a href="setup.html">⚙️ الإعدادات</a>
+  <a href="feed.html">🌾 المخزن</a>
+  <a href="weight.html">⚖️ الأوزان</a>
+  <a href="vax.html">💉 التحصينات</a>
+  <a href="notes.html">🩺 البيطري</a>
+  <a href="backup.html">💾 النسخ</a>
+</div>
+
+<main>
+<div class="card">
+<h2>📊 ملخص أعداد الطيور والنفوق</h2>
+<div class="grid">
+<div class="stat"><small>عمر الدورة الحالي</small><strong id="ageNow">0 يوم</strong></div>
+<div class="stat"><small>عدد الكتاكيت الأساسية</small><strong id="origChicks">0</strong></div>
+<div class="stat"><small>إجمالي النفوق المسجل</small><strong id="deadCountSum">0 طائر</strong></div>
+<div class="stat"><small>الطيور الحية الباقية</small><strong id="headNow">0 طائر</strong></div>
+<div class="stat"><small>التكلفة المباشرة للنافق</small><strong id="deadCostSum">0 ج.م</strong></div>
+</div>
+</div>
+
+<div class="card">
+<h2>تحليل التكاليف والمصروفات الإجمالية</h2>
+<div class="grid">
+<div class="stat"><small>تكلفة شراء الشحنة الأساسية</small><strong id="chicksCostVal">0 ج.م</strong></div>
+<div class="stat"><small>إجمالي مشتريات المخزن (علف/أدوية)</small><strong id="feedCostVal">0 ج.م</strong></div>
+<div class="stat"><small>المصروفات الأخرى (كهرباء/عمالة)</small><strong id="otherCostVal">0 ج.م</strong></div>
+<div class="stat"><small>إجمالي تكاليف التشغيل الكلية</small><strong id="totalCostVal" style="color:var(--red)">0 ج.م</strong></div>
+</div>
+</div>
+
+<div class="card">
+<h2>تقدير الأرباح والمبيعات المتوقعة</h2>
+<div class="grid">
+<div><label>الطيور المستهدفة للبيع</label><input id="saleCount" type="number" value="15"></div>
+<div><label>متوسط وزن الطائر (كجم)</label><input id="saleWeight" type="number" step="0.1" value="2.5"></div>
+<div><label>سعر الكيلو الحي (جنيه)</label><input id="salePrice" type="number" step="0.5" value="95"></div>
+</div>
+<div class="grid" style="margin-top:10px">
+<div class="stat"><small>إجمالي إيراد البيع المتوقع</small><strong id="revenue">0 ج.م</strong></div>
+<div class="stat"><small>صافي الربح / الخسارة المتوقعة</small><strong id="netProfitLoss">—</strong></div>
+<div class="stat"><small>النتيجة المالية للدورة</small><strong id="statusConclusion">—</strong></div>
+</div>
+</div>
+
+<div class="card">
+<h2>سجل المحاسبة التفصيلي للمشتروات والمصروفات</h2>
+<div class="tablewrap">
+<table>
+<thead>
+<tr>
+<th>البند / الحركة</th>
+<th>التاريخ</th>
+<th>التفاصيل والكمية</th>
+<th>المبلغ الإجمالي</th>
+</tr>
+</thead>
+<tbody id="financialDetailsRows">
+<tr><td colspan="4" class="muted">جاري تحميل البيانات...</td></tr>
+</tbody>
+</table>
+</div>
+</div>
+</main>
+
+<footer>متابع دورة الكتاكيت الاحترافي • تصميم وإدارة: السيد متولي</footer>
+
+<script>
+const $=id=>document.getElementById(id);
+
+// مفتاح العميل الخاص للخصوصية
+const activeKey = localStorage.getItem('omni_active_key') || 'default';
+const DBKEY = 'chick_app_data_' + activeKey;
+
+let db = { setup:{}, purchases:[], expenses:[] };
+
+function loadData(){
+  try{
+    let saved = localStorage.getItem(DBKEY);
+    if(saved) db = JSON.parse(saved);
+  }catch(e){}
+  
+  calculateAndRender();
+}
+
+function calculateAndRender(){
+  let setup = db.setup || {};
+  let startDate = setup.startDate || new Date().toISOString().slice(0,10);
+  
+  // العمر والنافق
+  let age = Math.max(0, Math.floor((new Date() - new Date(startDate)) / 86400000) + 1);
+  let chicks = setup.chicks || 15;
+  let dead = setup.dead || 0;
+  let currentBirds = Math.max(0, chicks - dead);
+  let chickPrice = setup.chickPrice || 36;
+  let deadCost = dead * chickPrice;
+  
+  $('ageNow').textContent = age + ' يوم';
+  $('origChicks').textContent = chicks + ' طائر';
+  $('deadCountSum').textContent = dead + ' طائر';
+  $('headNow').textContent = currentBirds + ' طائر';
+  $('deadCostSum').textContent = deadCost.toFixed(2) + ' ج.م';
+  
+  // التكاليف
+  let chicksTotalCost = chicks * chickPrice;
+  let purchasesTotalCost = (db.purchases || []).reduce((sum, x) => sum + ((x.qty || 0) * (x.price || 0)), 0);
+  let otherExpensesTotalCost = (db.expenses || []).reduce((sum, x) => sum + (x.amount || 0), 0);
+  let grandTotalCost = chicksTotalCost + purchasesTotalCost + otherExpensesTotalCost;
+  
+  $('chicksCostVal').textContent = chicksTotalCost.toFixed(2) + ' ج.م';
+  $('feedCostVal').textContent = purchasesTotalCost.toFixed(2) + ' ج.م';
+  $('otherCostVal').textContent = otherExpensesTotalCost.toFixed(2) + ' ج.م';
+  $('totalCostVal').textContent = grandTotalCost.toFixed(2) + ' ج.م';
+  
+  // المبيعات والربح
+  let sCount = parseFloat($('saleCount').value) || currentBirds;
+  let sWeight = parseFloat($('saleWeight').value) || 2.5;
+  let sPrice = parseFloat($('salePrice').value) || 95;
+  
+  let expectedRev = sCount * sWeight * sPrice;
+  let netResult = expectedRev - grandTotalCost;
+  
+  $('revenue').textContent = expectedRev.toFixed(2) + ' ج.م';
+  $('netProfitLoss').textContent = netResult.toFixed(2) + ' ج.م';
+  $('netProfitLoss').style.color = netResult >= 0 ? 'var(--green)' : 'var(--red)';
+  
+  if(netResult > 0) {
+    $('statusConclusion').textContent = '🟢 دورة رابحة (مكسب متوقع)';
+    $('statusConclusion').style.color = 'var(--green)';
+  } else if(netResult < 0) {
+    $('statusConclusion').textContent = '🔴 دورة خاسرة (خسارة متوقعة)';
+    $('statusConclusion').style.color = 'var(--red)';
+  } else {
+    $('statusConclusion').textContent = '⚪ نقطة التعادل';
+    $('statusConclusion').style.color = 'var(--muted)';
+  }
+  
+  // بناء جدول السجل التفصيلي
+  let rowsHtml = `
+    <tr><td><b>شراء الكتاكيت الأساسية</b></td><td>${startDate}</td><td>${chicks} طائر × ${chickPrice} ج.م</td><td>${chicksTotalCost.toFixed(2)} ج.م</td></tr>
+    <tr><td><b>خسارة النفوق المباشرة</b></td><td>حتى اليوم</td><td>${dead} طائر نافق × ${chickPrice} ج.م</td><td><b style="color:var(--red)">-${deadCost.toFixed(2)} ج.م</b></td></tr>
+  `;
+  
+  (db.purchases || []).forEach(p => {
+    rowsHtml += `<tr><td>مشتريات مخزن (${p.category})</td><td>${p.date}</td><td>${p.qty} × ${p.price} ج.م (${p.pay})</td><td>${((p.qty||0)*(p.price||0)).toFixed(2)} ج.م</td></tr>`;
+  });
+  
+  (db.expenses || []).forEach(e => {
+    rowsHtml += `<tr><td>مصروف تشغيل (${e.title})</td><td>${e.date}</td><td>مصروف عام</td><td>${(e.amount||0).toFixed(2)} ج.م</td></tr>`;
+  });
+  
+  $('financialDetailsRows').innerHTML = rowsHtml;
+}
+
+['saleCount','saleWeight','salePrice'].forEach(id => {
+  if($(id))$(id).oninput = calculateAndRender;
+});
+
+loadData();
+</script>
+<!-- سكربت استقبال البث والتحديثات المباشرة للشريط الدعائي -->
+<script>
+(function initBroadcastSystem() {
+  const BROADCAST_DB = 'omni_broadcast_messages';
+  const activeKey = localStorage.getItem('omni_active_key') || '';
+
+  function checkBroadcast() {
+    try {
+      let savedMsg = localStorage.getItem(BROADCAST_DB);
+      if (savedMsg) {
+        let msgObj = JSON.parse(savedMsg);
+        if (msgObj.target === 'ALL' || msgObj.target === activeKey) {
+          let marqueeContainer = document.querySelector('.marquee-container');
+          if (marqueeContainer) {
+            marqueeContainer.innerHTML = `<marquee behavior="scroll" direction="right" scrollamount="4">
+              ${msgObj.type}: ${msgObj.text} • إدارة: السيد متولي (مزرعة الإخلاص)
+            </marquee>`;
+          }
+        }
+      }
+    } catch (e) {}
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', checkBroadcast);
+  } else {
+    checkBroadcast();
+  }
+})();
+</script>
+
+</body>
+</html>

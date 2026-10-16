@@ -1,0 +1,32 @@
+const DB_URL = "https://tracking-52992-default-rtdb.firebaseio.com/";
+
+function verifyKey() {
+  let val = document.getElementById('keyInput').value.trim();
+  if(!val) { alert('الرجاء إدخال الكود أولاً'); return; }
+
+  // التحقق من مفاتيح السحاب
+  fetch(`${DB_URL}licenses.json`)
+    .then(res => res.json())
+    .then(data => {
+      let isValid = false;
+      if(data){
+        Object.values(data).forEach(item => {
+          if(item.key === val && item.active !== false) isValid = true;
+        });
+      }
+      
+      // مفتاح الطوارئ الخاص بك يعمل دائماً
+      if(val === 'MOTAWALLY-2026' || val === 'ELIKHLAS-FARM') isValid = true;
+
+      if(isValid){
+        localStorage.setItem('omni_app_license_verified', 'true');
+        localStorage.setItem('omni_active_key', val);
+        alert('🟢 تم التفعيل بنجاح! مرحباً بك في تطبيق مزرعة الإخلاص.');
+        window.location.href = 'index.html';
+      } else {
+        alert('❌ كود التفعيل غير صحيح أو غير مفعل. يرجى التواصل مع إدارة مزرعة الإخلاص.');
+      }
+    }).catch(() => {
+      alert('⚠️ تعذر الاتصال بالخادم، يرجى التأكد من الاتصال بالإنترنت.');
+    });
+}
